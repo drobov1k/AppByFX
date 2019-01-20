@@ -1,4 +1,4 @@
-package sample.source;
+package sample.controllers;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,6 +14,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.animations.Shake;
+import sample.source.IWriter;
+import sample.source.SQLWritable;
+import sample.source.User;
 
 public class Controller {
 
@@ -38,6 +41,7 @@ public class Controller {
     @FXML
     private Button showAllButton;
 
+    @SuppressWarnings("ThrowableNotThrown")
     @FXML
     void initialize() {
         authSignInButton.setOnAction(event -> {
@@ -54,9 +58,7 @@ public class Controller {
             else new OutOfMemoryError();
         });
 
-        loginSignUpButton.setOnAction(event ->{
-           openNewScene("/AppLayers/signUp.fxml", loginSignUpButton);
-        } );
+        loginSignUpButton.setOnAction(event -> openNewScene("/AppLayers/signUp.fxml", loginSignUpButton));
 
         showAllButton.setOnAction(event -> {
             openNewScene("/AppLayers/view.fxml", showAllButton);
@@ -64,12 +66,13 @@ public class Controller {
      }
 
     private void loginUser(String loginText, String loginPassword) throws SQLException {
-        DatabaseHandler  databaseHandler = new DatabaseHandler();
+        SQLWritable writer = new SQLWritable();
+        //DatabaseHandler  databaseHandler = new DatabaseHandler();
         User user = new User
                 .UserBuilder(loginText,loginPassword)
                 .build();
 
-        ResultSet result = databaseHandler.getUser(user);
+        ResultSet result = writer.getUser(user);
 
         int cout = 0;
 

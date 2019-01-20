@@ -1,5 +1,5 @@
 
-package sample.source;
+package sample.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;

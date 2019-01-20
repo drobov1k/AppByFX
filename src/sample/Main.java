@@ -1,3 +1,11 @@
+/*
+
+ *@author Eugeniy Dubovik
+ *@version 1.8
+ *
+ *
+*/
+
 package sample;
 
 import javafx.application.Application;
@@ -13,7 +21,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("../AppLayers/sample.fxml"));
         primaryStage.setTitle("Course");
-        primaryStage.getIcons().add(new Image("icon.png"));
+        primaryStage.getIcons().add(new Image("sample/accets/icon.png"));
         primaryStage.setScene(new Scene(root, 700, 400));
         primaryStage.show();
     }

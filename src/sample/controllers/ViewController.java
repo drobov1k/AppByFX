@@ -1,4 +1,4 @@
-package sample.source;
+package sample.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,17 +7,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.xml.sax.SAXException;
+import sample.source.*;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ViewController {
-    DatabaseHandler handler = null;
+    private IWriter sqlWriter = new SQLWritable();
+    private IWriter xmlWriter = new XMLWritable();
+
     private ObservableList<User> usersData = FXCollections.observableArrayList();
 
     @FXML
@@ -48,22 +47,19 @@ public class ViewController {
     private void initialize() {
         initData();
 
-        id.setCellValueFactory(new PropertyValueFactory<User, Integer>("id"));
-        idColumn.setCellValueFactory(new PropertyValueFactory<User, String>("firstName"));
-        loginColumn.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
-        passwordColumn.setCellValueFactory(new PropertyValueFactory<User, String>("userName"));
-        emailColumn.setCellValueFactory(new PropertyValueFactory<User, String>("password"));
-        columnColumn.setCellValueFactory(new PropertyValueFactory<User, String>("location"));
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        loginColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        passwordColumn.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
+        columnColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
 
         tableUsers.setItems(usersData);
 
-        removeUserButton.setOnAction(event ->{
-            try {
-                handler.removeUser(tableUsers.getSelectionModel().getSelectedItem());
-                tableUsers.getItems().remove(tableUsers.getSelectionModel().getSelectedIndex());
-            }  catch (ParserConfigurationException | IOException | SAXException | SQLException | TransformerException e) {
-                e.printStackTrace();
-            }
+        removeUserButton.setOnAction(event -> {
+            sqlWriter.removeUser(tableUsers.getSelectionModel().getSelectedItem());
+            xmlWriter.removeUser(tableUsers.getSelectionModel().getSelectedItem());
+            tableUsers.getItems().remove(tableUsers.getSelectionModel().getSelectedIndex());
         });
     }
 
@@ -74,7 +70,7 @@ public class ViewController {
         try {
             Statement statement = DBConnection.getInstance().getDbConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 usersData.add(new User.UserBuilder(resultSet.getString("username"), resultSet.getString("password"))
                         .firstName(resultSet.getString("firstname"))
                         .lastName(resultSet.getString("lastname"))

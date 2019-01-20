@@ -1,15 +1,21 @@
-package sample.source;
+package sample.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import sample.source.IWriter;
+import sample.source.SQLWritable;
+import sample.source.User;
+import sample.source.XMLWritable;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class SignUpController {
+    private IWriter sqlWriter = new SQLWritable();
+    private IWriter xmlWriter = new XMLWritable();
 
     @FXML
     private ResourceBundle resources;
@@ -45,20 +51,16 @@ public class SignUpController {
     void initialize() {
 
 
-        signUpButton.setOnAction(event -> {
-            signUpNewUser();
-        });
+        signUpButton.setOnAction(event -> signUpNewUser());
     }
 
     private void signUpNewUser() {
-            DatabaseHandler dbHandler = new DatabaseHandler();
-
             String firstName = signUpName.getText();
             String lastName  = signUpLastName.getText();
             String userName  = login_field.getText();
             String password  = pass_field.getText();
             String location  = signUpLocation.getText();
-            String gender    = "";
+            String gender;
 
             if (signUpCheckBoxMale.isSelected())
                 gender = "Male";
@@ -71,7 +73,8 @@ public class SignUpController {
                     .gender(gender)
                     .build();
 
-            dbHandler.signUpUser(user);
+            sqlWriter.signUpUser(user);
+            xmlWriter.signUpUser(user);
             Controller controller = new Controller();
             controller.openNewScene("/AppLayers/sample.fxml", signUpButton);
     }
