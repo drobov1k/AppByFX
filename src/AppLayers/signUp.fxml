@@ -6,6 +6,8 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.SignUpController">
@@ -46,10 +48,18 @@
             <CheckBox fx:id="signUpCheckBoxFemale" layoutX="382.0" layoutY="155.0" mnemonicParsing="false" text="Female" />
             </children>
         </AnchorPane>
-        <Label layoutX="265.0" layoutY="22.0" text="JDBCapp" textFill="WHITE">
+        <Label layoutX="192.0" layoutY="14.0" text="User registration">
             <font>
                 <Font name="Arial Black" size="34.0" />
             </font>
+         <textFill>
+            <LinearGradient endX="0.33009708737864074" endY="1.0" startX="0.3058252427184466">
+               <stops>
+                  <Stop color="#dd0000" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
         </Label>
     </children>
 </AnchorPane>

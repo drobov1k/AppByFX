@@ -5,10 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import sample.source.IWriter;
-import sample.source.SQLWritable;
-import sample.source.User;
-import sample.source.XMLWritable;
+import sample.animations.Shake;
+import sample.source.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,23 +47,22 @@ public class SignUpController {
 
     @FXML
     void initialize() {
-
-
         signUpButton.setOnAction(event -> signUpNewUser());
     }
 
     private void signUpNewUser() {
-            String firstName = signUpName.getText();
-            String lastName  = signUpLastName.getText();
-            String userName  = login_field.getText();
-            String password  = pass_field.getText();
-            String location  = signUpLocation.getText();
-            String gender;
+        String firstName = signUpName.getText();
+        String lastName = signUpLastName.getText();
+        String userName = login_field.getText();
+        String password = pass_field.getText();
+        String location = signUpLocation.getText();
+        String gender;
 
-            if (signUpCheckBoxMale.isSelected())
-                gender = "Male";
-            else gender = "Female";
+        if (signUpCheckBoxMale.isSelected())
+            gender = "Male";
+        else gender = "Female";
 
+        if (checkCorrectInput(signUpName, signUpLastName, login_field, pass_field, signUpLocation) == true) {
             User user = new User.UserBuilder(userName, password)
                     .firstName(firstName)
                     .lastName(lastName)
@@ -77,5 +74,20 @@ public class SignUpController {
             xmlWriter.signUpUser(user);
             Controller controller = new Controller();
             controller.openNewScene("/AppLayers/sample.fxml", signUpButton);
+        } else {
+            signUpButton.setOnAction(event -> AlertWindow.display("Warning", "Вы ввели не все поля.\nПожалуйста, заполните все поля."));
+        }
+    }
+
+    private boolean checkCorrectInput(TextField... str) {
+        boolean flag = true;
+        for (int i = 0; i < str.length; i++) {
+            if (str[i].getText().equals("")) {
+                Shake fieldShake = new Shake(str[i]);
+                fieldShake.playAnim();
+                flag = false;
+            }
+        }
+        return flag;
     }
 }
